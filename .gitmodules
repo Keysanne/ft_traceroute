@@ -1,3 +1,3 @@
-[submodule "argparse_c"]
-	path = argparse_c
+[submodule "argparse_C"]
+	path = argparse_C
 	url = git@github.com:Keysanne/argparse_C.git
