@@ -7,12 +7,13 @@ int main(int argc, char** argv)
     
     init_options(&options, '?', "help", BOOL);
     arg_start(&options);
-    if (find_options(&options, "help"))
-        struc.help = true;
-    else
-        printf("nope\n");
-    if ( struc.help == true)
-        help_options();
+    struc.help = find_options(&options, "help");
+    if ((bool)struc.help == true)
+    {
+        help_options(options);
+        free(struc.help);
+        arg_end(options);
+    }
     arg_end(options);
     return 0;
 }

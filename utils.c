@@ -6,8 +6,3 @@ tr  init_struct_tr()
     new.help = false;
     return new;
 }
-
-void    help_options()
-{
-    printf("*help panel*\n");
-}

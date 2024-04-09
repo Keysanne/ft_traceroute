@@ -1,28 +1,29 @@
 NAME= ft_traceroute
 COMPILER= gcc 
 OBJS=	${FILES:.c=.o}
-ARG_LIB= argparse_C/argparse
+ARG_LIB= argparse/argparse
 FILES=	main.c \
-		utils.c 
+		utils.c \
+		options.c
 
 all: ${NAME}
 
 ${NAME}: ${OBJS}
-		make -C argparse_C
-		${COMPILER} ${OBJS} ${ARG_LIB} -o ${NAME} -g -lm -pthread 
+		make -C argparse
+		${COMPILER} ${OBJS} ${ARG_LIB} -o ${NAME} -g3 -lm -pthread 
 
 ${OBJS}: ${FILES}
-		${COMPILER} -c ${FILES} -g -lm -pthread
+		${COMPILER} -c ${FILES} -g3 -lm -pthread
 
 submodules:
 		git submodule update --init
 
 clean:
-		make -C argparse_C clean
+		make -C argparse clean
 		rm -f ${OBJS}
 
 fclean: clean
-		make -C argparse_C fclean
+		make -C argparse fclean
 		rm -f ${NAME}
 
 re: fclean all

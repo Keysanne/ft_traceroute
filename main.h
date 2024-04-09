@@ -1,11 +1,11 @@
 #ifndef MAIN_H
 # define MAIN_H
 
-#include "argparse_C/arg.h"
+#include "argparse/arg.h"
 
 typedef struct  tr
 {
-    bool    help;
+    void*    help;
 }               tr;
 
 tr      init_struct_tr();
