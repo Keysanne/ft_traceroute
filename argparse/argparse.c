@@ -92,7 +92,7 @@ void    already_defined(char opt, char *fullname, arg_opt *tab)
 
 bool    add_to_options(arg_opt *tab, options opt)
 {
-    tab->options = ft_realloc(tab->options, (tab->nb_options + 1) * sizeof(options));
+    tab->options = realloc_struc(tab->options, tab->nb_options);
     if (tab->options == NULL)
         return false;
     tab->options[tab->nb_options] = opt;

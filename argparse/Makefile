@@ -13,7 +13,7 @@ ${NAME}: ${OBJS}
 		ar rcs ${NAME} ${OBJS} 
 
 ${OBJS}: ${FILES}
-		${COMPILER} -c ${FILES}
+		${COMPILER} -c ${FILES} -g3
 
 clean:
 		rm -f ${OBJS}

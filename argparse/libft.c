@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include "arg.h"
 
 int ft_strlen(char *str)
 {
@@ -69,25 +69,33 @@ char	*ft_strdup(char *s)
 	return (final);
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+void    *realloc_char(char** ptr, size_t size)
 {
-	size_t			i = -1;
-	unsigned char	*dest2 = (unsigned char *)dest, *src2 = (unsigned char *)src;
+    char	**new = malloc(size);
 
-	if (!dest && !src)
-		return (NULL);
-	while (++i < n)
-		dest2[i] = src2[i];
-	return (dest);
+	if (!new)
+		return NULL;
+	for(int i = 0; ptr[i]; i++)
+		new[i] = ptr[i];
+    free(ptr);
+    return new;
 }
 
-void    *ft_realloc(void *ptr, size_t size)
+options	copy_struc(options opt)
 {
-    void    *new_ptr = malloc(size);
+	options	new;
+	new.opt = opt.opt;
+    new.fullname_opt = opt.fullname_opt;
+    new.type = opt.type;
+    new.is_here = opt.is_here;
+	return new;
+}
 
-    if (!new_ptr)
-        return NULL;
-    ft_memcpy(new_ptr, ptr, sizeof(ptr));
-    free(ptr);
-    return new_ptr;
+void    *realloc_struc(options *ptr, int size)
+{
+	options	*new = malloc((size + 1) * sizeof(options));
+	for (int i = 0; i < size; i++)
+		new[i] = copy_struc(ptr[i]);
+	free(ptr);
+	return new;
 }

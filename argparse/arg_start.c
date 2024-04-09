@@ -163,7 +163,7 @@ char    **arg_without_opt(char **arg, arg_opt *tab)
         {
             if (not_an_option_arg(arg, i, tab))
             {
-                rst = ft_realloc(rst, (sizeof(char*) * size));
+                rst = realloc_char(rst, (sizeof(char*) * size));
                 rst[j++] = arg[i];
                 size++;
             }
