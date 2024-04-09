@@ -1,0 +1,8 @@
+atoi
+atof
+strcmp
+strdup
+isalpha
+isdigit
+strlen
+realloc
