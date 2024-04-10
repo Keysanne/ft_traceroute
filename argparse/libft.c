@@ -71,11 +71,11 @@ char	*ft_strdup(char *s)
 
 void    *realloc_char(char** ptr, size_t size)
 {
-    char	**new = malloc(size);
+    char	**new = malloc(size * sizeof(char*));
 
 	if (!new)
 		return NULL;
-	for(int i = 0; ptr[i]; i++)
+	for(int i = 0; i < size - 1; i++)
 		new[i] = ptr[i];
     free(ptr);
     return new;

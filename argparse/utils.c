@@ -59,3 +59,11 @@ char    *ft_strjoin(char *s1, char *s2)
     rst[j] = 0;
     return rst;
 }
+
+bool    only_tiret(char *str)
+{
+    for (int i = 0; str[i]; i++)
+        if (str[i] != '-')
+            return false;
+    return true;
+}

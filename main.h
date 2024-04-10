@@ -5,10 +5,12 @@
 
 typedef struct  tr
 {
-    void*    help;
+    void*   help;
+    char*   arg;
 }               tr;
 
 tr      init_struct_tr();
-void    help_options();
+char*   get_arg(char **arg);
+void    help_options(arg_opt options, void* help);
 
 #endif

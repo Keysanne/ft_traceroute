@@ -163,10 +163,15 @@ char    **arg_without_opt(char **arg, arg_opt *tab)
         {
             if (not_an_option_arg(arg, i, tab))
             {
-                rst = realloc_char(rst, (sizeof(char*) * size));
+                rst = realloc_char(rst, size);
                 rst[j++] = arg[i];
                 size++;
             }
+        }
+        else if (only_tiret(arg[i]))
+        {
+            printf("Error: '%s' can't be an argument\n", arg[i]);
+            arg_end(*tab);
         }
     }
     rst[j] = 0;

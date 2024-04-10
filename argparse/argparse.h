@@ -22,5 +22,6 @@ int	ft_isalpha(int c);
 int ft_strlen(char *str);
 void    *realloc_char(char** ptr, size_t size);
 void    *realloc_struc(options *ptr, int size);
+bool    only_tiret(char *str);
 
 #endif
