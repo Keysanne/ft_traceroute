@@ -18,8 +18,11 @@ int main(int argc, char** argv)
         help_options(options, struc.help);
     struc.arg = get_arg(options.clean_arg);
     //check ip -> look ping (change the DNS into FQDN)
-    // create an ICMP packet with a TTL who can be increment
-    //send the packet one by one and print the result (3 packet for the RTT)
+    // create an ICMP packet
+    //sendto() the packet one by one and print the result (3 packet for the RTT) (set a timeout for the packet 1sec)
+    //recvfrom() the ip will be stored in the struct print the info
+    // use setsockopt to update the TTL
+    //loop
     arg_end(options);
     return 0;
 }
