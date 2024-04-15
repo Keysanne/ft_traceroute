@@ -17,12 +17,21 @@ int main(int argc, char** argv)
     if ((bool)struc.help == true)
         help_options(options, struc.help);
     struc.arg = get_arg(options.clean_arg);
-    //check ip -> look ping (change the DNS into FQDN)
+    struc.ip = convert_to_ip(struc.arg);
+    if (!struc.ip)
+    {
+        free(struc.ip);
+        printf("./ft_traceroute: unknown host\n");
+        arg_end(options);
+    }
+    // create the socket
     // create an ICMP packet
-    //sendto() the packet one by one and print the result (3 packet for the RTT) (set a timeout for the packet 1sec)
-    //recvfrom() the ip will be stored in the struct print the info
+    // ----loop
+    // sendto() the packet one by one and print the result (3 packet for the RTT) (set a timeout for the packet 2sec)
+    // recvfrom() the ip will be stored in the struct print the info
     // use setsockopt to update the TTL
-    //loop
+    // ----loop
+    free(struc.ip);
     arg_end(options);
     return 0;
 }
