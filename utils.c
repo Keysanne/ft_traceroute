@@ -1,9 +1,53 @@
 #include "main.h"
 
+unsigned short checksum(void* buffer, int bytes)
+{
+	unsigned short	*buff = buffer;
+	unsigned int	sum;
+    unsigned short    result;
+
+	for (sum = 0; bytes > 1; bytes -= 2)
+		sum += *buff++;
+	if (bytes == 1)
+		sum += *(unsigned char*)buff;
+	sum = (sum >> 16) + (sum & 0xFFFF);
+	sum += (sum >> 16);
+    result = ~sum;
+	return result;
+}
+
 tr  init_struct_tr()
 {
     tr  new;
+	new.ttl = 1;
     new.help = false;
+	/*----------------SOCKET----------------*/
+	new.sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    if (new.sockfd == -1)
+    {
+        perror("socket");
+		exit(1);
+    }
+	struct timeval  timeout;
+    timeout.tv_sec = 2;
+    timeout.tv_usec = 0;
+    if (setsockopt(new.sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+    {
+        perror("sockopt recv timeout");
+        exit(1);
+    }
+    if (setsockopt(new.sockfd, IPPROTO_IP, IP_TTL, &new.ttl, sizeof(new.ttl)) < 0)
+    {
+        perror("sockopt ttl");
+		exit(1);
+    }
+	/*----------------PACKET----------------*/
+	struct icmphdr *icmp = (struct icmphdr *)new.packet;
+    icmp->un.echo.sequence = 0;
+    icmp->code = 0;
+    icmp->type = 8;
+    icmp->un.echo.id = 1;
+    icmp->checksum = checksum((unsigned short *)icmp, sizeof(struct icmphdr));
     return new;
 }
 

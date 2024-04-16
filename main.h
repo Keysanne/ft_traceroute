@@ -18,6 +18,9 @@ typedef struct  tr
     void*   help;
     char*   arg;
     char*   ip;
+    int     ttl;
+    int     sockfd;
+    char    packet[56];
 }               tr;
 
 tr      init_struct_tr();

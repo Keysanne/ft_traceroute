@@ -1,5 +1,24 @@
 #include "main.h"
 
+
+void    update_sock(tr struc, arg_opt options)
+{
+    struc.ttl += 1;
+    if (setsockopt(struc.sockfd, IPPROTO_IP, IP_TTL, &struc.ttl, sizeof(struc.ttl)) < 0)
+    {
+        perror("sockopt ttl");
+        free(struc.ip);
+        arg_end(options);
+    }
+}
+
+int     ping_ip(tr struc, int i)
+{
+    return 0;
+    // sendto() the packet one by one and print the result (3 packet for the RTT) (set a timeout for the packet 2sec)
+    // recvfrom() the ip will be stored in the struct print the info
+}
+
 int main(int argc, char** argv)
 {
     if (argc < 2)
@@ -24,13 +43,11 @@ int main(int argc, char** argv)
         printf("./ft_traceroute: unknown host\n");
         arg_end(options);
     }
-    // create the socket
-    // create an ICMP packet
-    // ----loop
-    // sendto() the packet one by one and print the result (3 packet for the RTT) (set a timeout for the packet 2sec)
-    // recvfrom() the ip will be stored in the struct print the info
-    // use setsockopt to update the TTL
-    // ----loop
+    for (int i = 1; i != 0; i++)
+    {
+        i = ping_ip(struc, i);
+        update_sock(struc, options);
+    }
     free(struc.ip);
     arg_end(options);
     return 0;
