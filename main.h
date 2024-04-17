@@ -18,15 +18,18 @@ typedef struct  tr
     void*   help;
     char*   arg;
     char*   ip;
+
     int     ttl;
     int     sockfd;
-    char    packet[56];
+    char    packet[64];
+
+    float*  time[2];
 }               tr;
 
 tr      init_struct_tr();
 char*   get_arg(char **arg);
 void    help_options(arg_opt options, void* help);
-char*    convert_to_ip(char *ip);
+char*   convert_to_ip(char *ip);
 bool    is_a_hostname(char *str);
 
 char	*ft_strdup(char *s);
