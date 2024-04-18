@@ -22,8 +22,6 @@ typedef struct  tr
     int     ttl;
     int     sockfd;
     char    packet[64];
-
-    float*  time[2];
 }               tr;
 
 tr      init_struct_tr();

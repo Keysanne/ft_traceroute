@@ -8,6 +8,7 @@ int     ping_ip(tr *struc, arg_opt options)
     socklen_t   fromlen = sizeof(from);
     char        buffer[64], msg[50];
     bool        ip_w = false;
+    struct timeval  start, end;
 
     dst.sin_port = 4000;
     dst.sin_family = AF_INET;
@@ -15,13 +16,13 @@ int     ping_ip(tr *struc, arg_opt options)
     if (struc->ttl > 9)
         sprintf(msg, " %d  ", struc->ttl);
     else
-        sprintf(msg, "  %d  ", struc->ttl);
+        sprintf(msg, "  %d   ", struc->ttl);
     write(1, msg, strlen(msg));
     bzero(msg, sizeof(msg));
     /*--------------------SEND-3-PACKETS--------------------*/
     for (int i = 0; i < 3; i++)
     {
-        //time start
+        gettimeofday(&start, NULL);
         if(sendto(struc->sockfd, struc->packet, sizeof(struct icmphdr), 0, (struct sockaddr*)&dst, sizeof(dst)) <= 0)
         {
             perror("sendto");
@@ -29,23 +30,26 @@ int     ping_ip(tr *struc, arg_opt options)
         }
         int x = recvfrom(struc->sockfd, (char *)buffer, 64, 0, (struct sockaddr *)&from, &fromlen);
         if (x < 0)
-            write(1, "* ", 2);
+            write(1, "*  ", 2);
         else
         {
+            gettimeofday(&end, NULL);
+            double time = (end.tv_sec - start.tv_sec) * 1000.0;
+            time += (end.tv_usec - start.tv_usec) / 1000.0;
             if (ip_w == false)
             {
-                sprintf(msg, "1 ");
+                inet_ntop(AF_INET, &(from.sin_addr), ip, INET_ADDRSTRLEN);
+                sprintf(msg, "%s  %.3fms  ", ip, time);
                 ip_w = true;
             }
             else
-                sprintf(msg, "2 ");
+                sprintf(msg, "%.3fms  ", time);
             write(1, msg, ft_strlen(msg));
             bzero(msg, sizeof(msg));
         }
     }
     write(1, "\n", 1);
     /*--------------------RECUP-IP--------------------*/
-    inet_ntop(AF_INET, &(from.sin_addr), ip, INET_ADDRSTRLEN);
     if (strcmp(ip, struc->ip) == 0)
         return 0;
     /*--------------------UPDATE-TTL--------------------*/
@@ -85,6 +89,7 @@ int main(int argc, char** argv)
         printf("./ft_traceroute: unknown host\n");
         arg_end(options);
     }
+    printf("./ft_traceroute to %s (%s), 64 hops max\n", struc.arg, struc.ip);
     for (int i = 1; i != 0;)
         i = ping_ip(&struc, options);
     free(struc.ip);
