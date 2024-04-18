@@ -4,15 +4,20 @@ int     ping_ip(tr *struc, arg_opt options)
 {
     struct sockaddr_in  dst, from;
 
-    dst.sin_family = AF_INET;
-    char ip[INET_ADDRSTRLEN];
+    char        ip[INET_ADDRSTRLEN];
     socklen_t   fromlen = sizeof(from);
-    char        buffer[64];
+    char        buffer[64], msg[50];
+    bool        ip_w = false;
 
-    inet_aton(struc->ip, &(dst.sin_addr));
     dst.sin_port = 4000;
-    printf("  %d : ", struc->ttl);
-    //remplacer par un write
+    dst.sin_family = AF_INET;
+    inet_aton(struc->ip, &(dst.sin_addr));
+    if (struc->ttl > 9)
+        sprintf(msg, " %d  ", struc->ttl);
+    else
+        sprintf(msg, "  %d  ", struc->ttl);
+    write(1, msg, strlen(msg));
+    bzero(msg, sizeof(msg));
     /*--------------------SEND-3-PACKETS--------------------*/
     for (int i = 0; i < 3; i++)
     {
@@ -25,11 +30,20 @@ int     ping_ip(tr *struc, arg_opt options)
         int x = recvfrom(struc->sockfd, (char *)buffer, 64, 0, (struct sockaddr *)&from, &fromlen);
         if (x < 0)
             write(1, "* ", 2);
-            // no time -> '*'
         else
-            write(1, "time ", 5);
-            //write time end et l'ip si elle n'a pas deja ete ecrite
+        {
+            if (ip_w == false)
+            {
+                sprintf(msg, "1 ");
+                ip_w = true;
+            }
+            else
+                sprintf(msg, "2 ");
+            write(1, msg, ft_strlen(msg));
+            bzero(msg, sizeof(msg));
+        }
     }
+    write(1, "\n", 1);
     /*--------------------RECUP-IP--------------------*/
     inet_ntop(AF_INET, &(from.sin_addr), ip, INET_ADDRSTRLEN);
     if (strcmp(ip, struc->ip) == 0)

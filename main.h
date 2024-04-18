@@ -38,5 +38,6 @@ int	    ft_strncmp(const char *s1, const char *s2, size_t n);
 int     size_tab(char **tab);
 void    free_tab(char **tab);
 int	    ft_isdigit(int c);
+int     ft_strlen(char *str);
 
 #endif
