@@ -18,14 +18,14 @@ int     ping_ip(tr *struc, arg_opt options)
     else
         sprintf(msg, "  %d   ", struc->ttl);
     write(1, msg, strlen(msg));
-    bzero(msg, sizeof(msg));
+    ft_bzero(msg, sizeof(msg));
     /*--------------------SEND-3-PACKETS--------------------*/
     for (int i = 0; i < 3; i++)
     {
         gettimeofday(&start, NULL);
         if(sendto(struc->sockfd, struc->packet, sizeof(struct icmphdr), 0, (struct sockaddr*)&dst, sizeof(dst)) <= 0)
         {
-            perror("sendto");
+            printf("Error: sendto");
             return 0;
         }
         int x = recvfrom(struc->sockfd, (char *)buffer, 64, 0, (struct sockaddr *)&from, &fromlen);
@@ -48,7 +48,7 @@ int     ping_ip(tr *struc, arg_opt options)
             else
                 sprintf(msg, "%.3fms  ", time);
             write(1, msg, ft_strlen(msg));
-            bzero(msg, sizeof(msg));
+            ft_bzero(msg, sizeof(msg));
         }
     }
     write(1, "\n", 1);
@@ -61,7 +61,7 @@ int     ping_ip(tr *struc, arg_opt options)
         return 0;
     if (setsockopt(struc->sockfd, IPPROTO_IP, IP_TTL, &struc->ttl, sizeof(struc->ttl)) < 0)
     {
-        perror("sockopt ttl");
+        printf("Error: sockopt ttl update\n");
         free(struc->ip);
         arg_end(options);
     }
@@ -100,6 +100,3 @@ int main(int argc, char** argv)
     arg_end(options);
     return 0;
 }
-
-//change perror to strerror
-// implement my own bzero

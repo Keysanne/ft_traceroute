@@ -37,5 +37,6 @@ int     size_tab(char **tab);
 void    free_tab(char **tab);
 int	    ft_isdigit(int c);
 int     ft_strlen(char *str);
+void    ft_bzero(void *s, size_t n);
 
 #endif
