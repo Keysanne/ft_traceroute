@@ -14,7 +14,7 @@ int     ping_ip(tr *struc, arg_opt options)
     dst.sin_family = AF_INET;
     inet_aton(struc->ip, &(dst.sin_addr));
     if (struc->ttl > 9)
-        sprintf(msg, " %d  ", struc->ttl);
+        sprintf(msg, " %d   ", struc->ttl);
     else
         sprintf(msg, "  %d   ", struc->ttl);
     write(1, msg, strlen(msg));
@@ -30,7 +30,10 @@ int     ping_ip(tr *struc, arg_opt options)
         }
         int x = recvfrom(struc->sockfd, (char *)buffer, 64, 0, (struct sockaddr *)&from, &fromlen);
         if (x < 0)
-            write(1, "*  ", 2);
+        {
+            write(1, "*  ", 3);
+            ip[0] = 0;
+        }
         else
         {
             gettimeofday(&end, NULL);
@@ -93,6 +96,10 @@ int main(int argc, char** argv)
     for (int i = 1; i != 0;)
         i = ping_ip(&struc, options);
     free(struc.ip);
+    close(struc.sockfd);
     arg_end(options);
     return 0;
 }
+
+//change perror to strerror
+// implement my own bzero

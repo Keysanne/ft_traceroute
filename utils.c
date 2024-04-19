@@ -29,7 +29,7 @@ tr  init_struct_tr()
 		exit(1);
     }
 	struct timeval  timeout;
-    timeout.tv_sec = 3;
+    timeout.tv_sec = 2;
     timeout.tv_usec = 0;
     if (setsockopt(new.sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
     {
@@ -42,6 +42,7 @@ tr  init_struct_tr()
 		exit(1);
     }
 	/*----------------PACKET----------------*/
+	bzero(new.packet, sizeof(new.packet));
 	struct icmphdr *icmp = (struct icmphdr *)new.packet;
     icmp->un.echo.sequence = 0;
     icmp->code = 0;
