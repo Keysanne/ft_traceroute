@@ -25,7 +25,7 @@ int     ping_ip(tr *struc, arg_opt options)
         gettimeofday(&start, NULL);
         if(sendto(struc->sockfd, struc->packet, sizeof(struct icmphdr), 0, (struct sockaddr*)&dst, sizeof(dst)) <= 0)
         {
-            printf("Error: sendto");
+            printf("Error: sendto\n");
             return 0;
         }
         int x = recvfrom(struc->sockfd, (char *)buffer, 64, 0, (struct sockaddr *)&from, &fromlen);

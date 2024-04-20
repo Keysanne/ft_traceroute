@@ -16,6 +16,10 @@
 typedef struct  tr
 {
     void*   help;
+    void*   max_hop;
+    void*   port;
+    void*   nb_of_packets;
+    
     char*   arg;
     char*   ip;
 

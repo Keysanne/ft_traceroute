@@ -25,7 +25,7 @@ tr  init_struct_tr()
 	new.sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (new.sockfd == -1)
     {
-        printf("Error: socket");
+        printf("Error: socket\n");
 		exit(1);
     }
 	struct timeval  timeout;
@@ -33,12 +33,12 @@ tr  init_struct_tr()
     timeout.tv_usec = 0;
     if (setsockopt(new.sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
     {
-        printf("Error: sockopt recv timeout");
+        printf("Error: sockopt recv timeout\n");
         exit(1);
     }
     if (setsockopt(new.sockfd, IPPROTO_IP, IP_TTL, &new.ttl, sizeof(new.ttl)) < 0)
     {
-        printf("Error: sockopt ttl");
+        printf("Error: sockopt ttl\n");
 		exit(1);
     }
 	/*----------------PACKET----------------*/

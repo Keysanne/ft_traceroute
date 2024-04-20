@@ -27,19 +27,6 @@ long hxtoi(char* str)
 
 char* hostname_to_ip(char * hostname)
 {
-	/*-------------------FQDN-------------------*/
-	if (is_a_hostname(hostname))
-	{
-		char**	tab = ft_split(hostname, '.');
-		if (size_tab(tab) != 3)
-		{
-			free_tab(tab);
-			free(hostname);
-			return strdup("");
-		}
-		free_tab(tab);
-	}
-	/*------------------------------------------*/
 	struct hostent	*host = gethostbyname(hostname);
 
 	free(hostname);
