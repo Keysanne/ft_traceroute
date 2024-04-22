@@ -16,10 +16,19 @@
 typedef struct  tr
 {
     void*   help;
+
     void*   max_hop;
-    void*   port;
-    void*   nb_of_packets;
+    int     _max_hop;
     
+    void*   port;
+    int     _port;
+
+    void*   nb_of_packets;
+    int     _nb_of_packets;
+    
+    void*   wait;
+    int     _wait;
+
     char*   arg;
     char*   ip;
 

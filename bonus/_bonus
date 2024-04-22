@@ -2,3 +2,4 @@
 - -m (max hop (max ttl))
 - -p (port in dst)
 - -q (number of packets sent)
+- -w (waittime)

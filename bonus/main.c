@@ -10,7 +10,7 @@ int     ping_ip(tr *struc, arg_opt options)
     bool        ip_w = false;
     struct timeval  start, end;
 
-    dst.sin_port = (int)struc->port;
+    dst.sin_port = struc->_port;
     dst.sin_family = AF_INET;
     inet_aton(struc->ip, &(dst.sin_addr));
     if (struc->ttl > 9)
@@ -20,7 +20,7 @@ int     ping_ip(tr *struc, arg_opt options)
     write(1, msg, strlen(msg));
     ft_bzero(msg, sizeof(msg));
     /*--------------------SEND-3-PACKETS--------------------*/
-    for (int i = 0; i < (int)struc->nb_of_packets; i++)
+    for (int i = 0; i < struc->_nb_of_packets; i++)
     {
         gettimeofday(&start, NULL);
         if(sendto(struc->sockfd, struc->packet, sizeof(struct icmphdr), 0, (struct sockaddr*)&dst, sizeof(dst)) <= 0)
@@ -57,7 +57,7 @@ int     ping_ip(tr *struc, arg_opt options)
         return 0;
     /*--------------------UPDATE-TTL--------------------*/
     struc->ttl += 1;
-    if (struc->ttl > (int)struc->max_hop)
+    if (struc->ttl > struc->_max_hop)
         return 0;
     if (setsockopt(struc->sockfd, IPPROTO_IP, IP_TTL, &struc->ttl, sizeof(struc->ttl)) < 0)
     {
@@ -70,12 +70,39 @@ int     ping_ip(tr *struc, arg_opt options)
 
 void    _options(tr *struc, arg_opt options)
 {
-    if((struc->max_hop = find_options(&options, "help")) == NULL)
-        struc->max_hop = 64;
-    if((struc->port = find_options(&options, "help")) == NULL)
-        struc->port = 4000;
-    if((struc->nb_of_packets = find_options(&options, "help")) == NULL)
-        struc->nb_of_packets = 3;
+    /*------------------MAX_HOP------------------*/
+    struc->max_hop = find_options(&options, "max-hop");
+    if(struc->max_hop == NULL)
+        struc->_max_hop = 64;
+    else
+        struc->_max_hop = *(int *)struc->max_hop;
+    /*-------------------PORTS-------------------*/
+    struc->port = find_options(&options, "port");
+    if(struc->port == NULL)
+        struc->_port = 4000;
+    else
+        struc->_port = *(int *)struc->port;
+    /*---------------NB_OF_PACKETS---------------*/
+    struc->nb_of_packets = find_options(&options, "tries");
+    if(struc->nb_of_packets == NULL)
+        struc->_nb_of_packets = 3;
+    else
+        struc->_nb_of_packets = *(int *)struc->nb_of_packets;
+    /*---------------WAIT---------------*/
+    struc->wait = find_options(&options, "wait");
+    if(struc->wait == NULL)
+        struc->_wait = 3;
+    else
+        struc->_wait = *(int *)struc->wait;
+    struct timeval  timeout;
+    timeout.tv_sec = struc->_wait;
+    timeout.tv_usec = 0;
+    if (setsockopt(struc->sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+    {
+        printf("Error: sockopt recv timeout\n");
+        close(struc->sockfd);
+        arg_end(options);
+    }
 }
 
 int main(int argc, char** argv)
@@ -86,13 +113,14 @@ int main(int argc, char** argv)
         printf("Try './ft_traceroute --help' or './ft_traceroute -?' for more information.\n");
         return 1;
     }
-    tr       struc = init_struct_tr();
     arg_opt     options = arg_init(argc, argv);
+    tr       struc = init_struct_tr();
     
     init_options(&options, '?', "help", BOOL);
-    init_options(&options, 'm', "max-hop", BOOL);
-    init_options(&options, 'p', "port", BOOL);
-    init_options(&options, 'q', "tries", BOOL);
+    init_options(&options, 'm', "max-hop", INT);
+    init_options(&options, 'p', "port", INT);
+    init_options(&options, 'q', "tries", INT);
+    init_options(&options, 'w', "wait", INT);
     arg_start(&options);
     _options(&struc, options);
     struc.help = find_options(&options, "help");
@@ -106,7 +134,7 @@ int main(int argc, char** argv)
         printf("./ft_traceroute: unknown host\n");
         arg_end(options);
     }
-    printf("./ft_traceroute to %s (%s), %d hops max\n", struc.arg, struc.ip, (int)struc.max_hop);
+    printf("./ft_traceroute to %s (%s), %d hops max\n", struc.arg, struc.ip, struc._max_hop);
     for (int i = 1; i != 0;)
         i = ping_ip(&struc, options);
     free(struc.ip);
