@@ -54,14 +54,28 @@ char*    convert_to_ip(char *str)
 	char *ip = ft_strdup(str);
 
     if (inet_pton(AF_INET, ip, &(sa.sin_addr)) == 1)
+	{
+		if (strcmp(ip, "0.0.0.0") == 0)
+		{
+			free(ip);
+			return ft_strdup("127.0.0.1");
+		}
         return ip;
-    else
+	}
+	else
     {
         if (ft_strncmp(ip, "0x", 2) == 0)
             sprintf(ip, "%ld", hxtoi(ip));
         ip = hostname_to_ip(ip);
         if (inet_pton(AF_INET, ip, &(sa.sin_addr)) == 1)
-            return ip;
+        {
+			if (strcmp(ip, "0.0.0.0") == 0)
+			{
+				free(ip);
+				return ft_strdup("127.0.0.1");
+			}
+			return ip;
+		}
     }
 	free(ip);
 	return NULL;
